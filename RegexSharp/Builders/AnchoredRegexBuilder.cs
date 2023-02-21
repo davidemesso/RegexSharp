@@ -1,32 +1,28 @@
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RegexSharp.Builders;
 
-public class AnchoredRegexBuilder
+public class AnchoredRegexBuilder : BaseRegexBuilder
 {
-    private readonly StringBuilder _builder;
+    public AnchoredRegexBuilder(StringBuilder builder) : base(builder) {}
 
-    public AnchoredRegexBuilder(StringBuilder builder)
-    {
-        _builder = builder;
-    }
-
-    public string LineStart()
+    public BaseRegexBuilder LineStart()
     {
         _builder.Insert(0, "^");
-        return _builder.ToString();
+        return new BaseRegexBuilder(_builder);
     }
 
-    public string LineEnd()
+    public BaseRegexBuilder LineEnd()
     {
         _builder.Append("$");
-        return _builder.ToString();
+        return new BaseRegexBuilder(_builder);
     }
 
-    public string LineStartEnd()
+    public BaseRegexBuilder LineStartEnd()
     {
         _builder.Insert(0, "^");
         _builder.Append("$");
-        return _builder.ToString();
+        return new BaseRegexBuilder(_builder);
     }
 }

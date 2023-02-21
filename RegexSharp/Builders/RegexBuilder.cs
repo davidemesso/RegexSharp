@@ -1,14 +1,14 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RegexSharp.Builders;
 
-public class RegexBuilder
+public class RegexBuilder : BaseRegexBuilder
 {
-    private readonly StringBuilder _builder;
-
     public AnchoredRegexBuilder At => new AnchoredRegexBuilder(_builder);
 
     public RegexBuilder()
+        : base(new())
     {
         _builder = new StringBuilder();
     }

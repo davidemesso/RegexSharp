@@ -5,61 +5,122 @@ namespace RegexSharp.Test;
 
 public class UnitTestRegexBuilder
 {
-    [Fact]
-    public void MatchExact()
+    [Theory]
+    [InlineData("aabcc")]
+    [InlineData("abc")]
+    public void Match_ShouldMatch_AGivenString(string input)
     {
-        var builder = new RegexBuilder()
-            .Exact("abc");
+        // Arrange
+        var regex = new RegexBuilder()
+            .Exact("abc")
+            .Build();
         
-        var regex = new Regex(builder);
+        // Act
+        var match = regex.Match(input); 
 
-        Assert.True(regex.Match("aabcc").Success);
-        Assert.True(regex.Match("abc").Success);
-        Assert.False(regex.Match("cba").Success);
+        // Assert
+        Assert.True(match.Success);
+    }
+
+    [Theory]
+    [InlineData("cba")]
+    [InlineData("abbc")]
+    public void Match_ShouldNotMatch_AGivenString(string input)
+    {
+        // Arrange
+        var regex = new RegexBuilder()
+            .Exact("abc")
+            .Build();
+        
+        // Act
+        var match = regex.Match(input); 
+
+        // Assert
+        Assert.False(match.Success);
+    }
+
+    [Theory]
+    [InlineData("abc")]
+    [InlineData("abcc")]
+    public void Match_ShouldMatch_AGivenStringStarting(string input)
+    {
+        var regex = new RegexBuilder()
+            .Exact("abc")
+            .At.LineStart()
+            .Build();
+
+        // Act
+        var match = regex.Match(input); 
+
+        // Assert
+        Assert.True(match.Success);
+    }
+
+    [Theory]
+    [InlineData("aabc")]
+    [InlineData("abbc")]
+    public void Match_ShouldNotMatch_AGivenStringStarting(string input)
+    {
+        var regex = new RegexBuilder()
+            .Exact("abc")
+            .At.LineStart()
+            .Build();
+
+        // Act
+        var match = regex.Match(input); 
+
+        // Assert
+        Assert.False(match.Success);
+    }
+
+    [Theory]
+    [InlineData("abc")]
+    [InlineData("aabc")]
+    public void Match_ShouldMatch_AGivenStringEnding(string input)
+    {
+        var regex = new RegexBuilder()
+            .Exact("abc")
+            .At.LineEnd()
+            .Build();
+
+        // Act
+        var match = regex.Match(input); 
+
+        // Assert
+        Assert.True(match.Success);
+    }
+
+    [Theory]
+    [InlineData("abcc")]
+    [InlineData("abbc")]
+    public void Match_ShouldNotMatch_AGivenStringEnding(string input)
+    {
+        var regex = new RegexBuilder()
+            .Exact("abc")
+            .At.LineEnd()
+            .Build();
+
+        // Act
+        var match = regex.Match(input); 
+
+        // Assert
+        Assert.False(match.Success);
     }
 
     [Fact]
-    public void MatchStartLine()
+    public void Match_ShouldMatch_AGivenStringOnlyStartingAndEnding()
     {
-        var builder = new RegexBuilder()
+        var regex = new RegexBuilder()
             .Exact("abc")
-            .At
-                .LineStart();
-        
-        var regex = new Regex(builder);
+            .At.LineEnd()
+            .Build();
 
-        Assert.True(regex.Match("abc").Success);
-        Assert.True(regex.Match("abcc").Success);
-        Assert.False(regex.Match("aabc").Success);
-    }
+        // Act
+        var match = regex.Match("abc"); 
+        var notMatch = regex.Match("cba"); 
 
-    [Fact]
-    public void MatchEndLine()
-    {
-        var builder = new RegexBuilder()
-            .Exact("abc")
-            .At
-                .LineEnd();
-        
-        var regex = new Regex(builder);
-
-        Assert.True(regex.Match("abc").Success);
-        Assert.False(regex.Match("abcc").Success);
-        Assert.True(regex.Match("aabc").Success);
-    }
-
-    [Fact]
-    public void MatchStartEndLine()
-    {
-        var builder = new RegexBuilder()
-            .Exact("abc")
-            .At
-                .LineStartEnd();
-        
-        var regex = new Regex(builder);
-
-        Assert.True(regex.Match("abc").Success);
-        Assert.False(regex.Match("abcc").Success);
-        Assert.False(regex.Match("aabc").Success);
+        // Assert
+        Assert.True(match.Success);
+        Assert.False(notMatch.Success);
     }
 }

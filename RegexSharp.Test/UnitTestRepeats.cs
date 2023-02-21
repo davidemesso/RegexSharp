@@ -8,12 +8,10 @@ public class UnitTestRepeat
     [Fact]
     public void MatchRange()
     {
-        var builder = new RegexBuilder()
+        var regex = new RegexBuilder()
             .Exact("abc")[1..3]
-            .At
-                .LineStartEnd();
-        
-        var regex = new Regex(builder);
+            .At.LineStartEnd()
+            .Build();
 
         Assert.False(regex.Match("cba").Success);
         Assert.True(regex.Match("abc").Success);
